@@ -9,17 +9,36 @@ The fact that some lines are partially covered leads to computation differences 
 the 2 applications. This means that relying on one tool will confuse the user of the
 other tools.
 
-## Coverage % computation for Codecov.io
-
-See [https://codecov.io/gh/sbougerel/codecov-go-example](on Codecov.io)
-
-## Coverage % computation for Go tool
+## Obtaining coverage
 
 ```
 $ go test -race -covermode=atomic -coverprofile=coverage.txt .
 ok  	github.com/sbougerel/codecov-go-example	1.016s	coverage: 50.0% of statements
 ```
 
-When runing with `go test -covermode=atomic -coverprofile=coverage.txt`, the output
-generated contains the number of statements being covered at each line.
+The generated coverage file contents are:
 
+```
+mode: atomic
+github.com/sbougerel/codecov-go-example/main.go:5.44,6.8 1 1
+github.com/sbougerel/codecov-go-example/main.go:10.2,10.8 1 1
+github.com/sbougerel/codecov-go-example/main.go:14.2,14.13 1 0
+github.com/sbougerel/codecov-go-example/main.go:6.8,8.3 1 0
+github.com/sbougerel/codecov-go-example/main.go:10.8,12.3 1 1
+github.com/sbougerel/codecov-go-example/main.go:17.13,19.2 1 0
+```
+
+## Coverage % computation for Codecov.io is 25%
+
+See [coverage results on Codecov.io](https://codecov.io/gh/sbougerel/codecov-go-example).
+
+Codecov.io looks at the same generated file `coverage.txt` as the GO tool but reports only half the coverage.
+
+## Coverage % computation for Go tool is 50%
+
+As can be seen above, the GO tool reports that 50% of statements are covered.
+For more visual evidance that the coverage is reported differently:
+
+```
+go tool cover -html coverage.txt
+```
