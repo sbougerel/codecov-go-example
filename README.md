@@ -42,3 +42,23 @@ For more visual evidance that the coverage is reported differently:
 ```
 go tool cover -html coverage.txt
 ```
+
+GO test counts "statements" as reported in `coverage.txt`. It sees that 3 statements are covered, while 3 statements are left out, thus reaching 50% coverage.
+
+Let's focus on line 6 to 8 in `main.go`:
+```go
+	if !a {	
+		return false
+	}
+```
+
+In line 6, `if !a` is covered but the opening curly `{` is not. Codecov reports a partial coverage due to this curly brace and does not include it in the final count, thus diverting from it.
+
+Also, Codecov.io sees 8 lines, whereas GO tools reports 6 statements.
+
+## Possible resolution
+It seems that Codecov.io has internal logic to avoid including closing `}` with no statements on the lines, as evidenced by lines 8, 12, 19 not being highlighted in Codecov.io inspite of being present in the report.
+
+__The same logic should be applied to opening `{` with no statements__
+
+With this logic, both numbers would now be completely in-line, the partially covered line would be avoided.
