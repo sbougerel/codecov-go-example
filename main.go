@@ -1,11 +1,8 @@
 package main
 
-import (
-	"fmt"
-	"time"
-)
+import "fmt"
 
-func partiallyCovered(a bool, b bool, c bool) bool {
+func partiallyCovered(a bool, b bool) bool {
 	if !a {
 		return false
 	}
@@ -14,15 +11,9 @@ func partiallyCovered(a bool, b bool, c bool) bool {
 		return false
 	}
 
-	if !c {
-		return false
-	}
-
 	return true
 }
 
 func main() {
-	time.Sleep(1 * time.Millisecond)
-	fmt.Printf("Is 42 the answer to everything? %v!\n", partiallyCovered(true, false, false))
-	return
+	fmt.Printf("Is 42 the answer to everything? %v!\n", partiallyCovered(true, false))
 }
