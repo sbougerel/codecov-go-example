@@ -28,11 +28,11 @@ github.com/sbougerel/codecov-go-example/main.go:10.8,12.3 1 1
 github.com/sbougerel/codecov-go-example/main.go:17.13,19.2 1 0
 ```
 
-## Coverage % computation for Codecov.io is 25%
+## Coverage % computation for Codecov.io is 37.5%
 
 See [coverage results on Codecov.io](https://codecov.io/gh/sbougerel/codecov-go-example).
 
-Codecov.io looks at the same generated file `coverage.txt` as the GO tool but reports only half the coverage.
+Codecov.io looks at the same generated file `coverage.txt` as the GO tool but reports a much lower coverage.
 
 ## Coverage % computation for Go tool is 50%
 
