@@ -9,9 +9,16 @@ The fact that some lines are partially covered leads to computation differences 
 the 2 applications. This means that relying on one tool will confuse the user of the
 other tools.
 
-## Explanation of coverage % computation for Codecov.io
+## Coverage % computation for Codecov.io
 
-## Explanation of coverage % computation for Go tool
+See [https://codecov.io/gh/sbougerel/codecov-go-example](on Codecov.io)
+
+## Coverage % computation for Go tool
+
+```
+$ go test -race -covermode=atomic -coverprofile=coverage.txt .
+ok  	github.com/sbougerel/codecov-go-example	1.016s	coverage: 50.0% of statements
+```
 
 When runing with `go test -covermode=atomic -coverprofile=coverage.txt`, the output
 generated contains the number of statements being covered at each line.
