@@ -58,7 +58,7 @@ In line 6, `if !a` is covered but the opening curly `{` is not. Codecov reports 
 
 Also, Codecov.io sees 8 lines, whereas GO tools reports 6 statements.
 
-## Possible resolution
+# Possible resolution
 It seems that Codecov.io has internal logic to avoid including closing `}` with no statements on the lines, as evidenced by lines 8, 12, 19 not being highlighted in Codecov.io inspite of being present in the report.
 
 __The same logic should be applied to opening `{` with no statements__
