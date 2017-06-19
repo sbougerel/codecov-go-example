@@ -64,3 +64,43 @@ It seems that Codecov.io has internal logic to avoid including closing `}` with 
 __The same logic should be applied to opening `{` with no statements__
 
 With this logic, both numbers would now be completely in-line, the partially covered line would be avoided.
+
+## Trials with Cobertura XML format
+
+Using external utilities:
+
+```
+$ go get github.com/axw/gocov/...
+$ go get github.com/AlekSi/gocov-xml
+```
+
+I was able to get the desired 50% coverage with the exact same line-by-line
+coverage output reported by `go test ...` This is the best fit so far. It is a
+bit annoying to have to go through these tools, however it is necessary, it
+seems.
+
+It seems that `gocov` also uses _magic_ to remove the opening and closing braces
+from the reports. Which in turn, is then interpreted to a matching count by
+Codecov.io.
+
+This should probably be the preferred method of reporting code coverage for
+Golang projects in Codecov.io, even if it is convoluted. At least, with this
+method, both tools seem to have consistent output.
+
+## Trials with difference gcov parse configuration
+
+Trying with:
+
+```
+parsers:
+  gcov:
+    branch_detection:
+      conditional: no
+      loop: no
+      method: no
+      macro: no
+```
+
+It also generated a desired 50% coverage output on Codecov. However the line
+count remained different from the statement count by `go test` which is a bit
+annoying.
