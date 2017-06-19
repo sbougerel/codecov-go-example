@@ -87,9 +87,9 @@ This should probably be the preferred method of reporting code coverage for
 Golang projects in Codecov.io, even if it is convoluted. At least, with this
 method, both tools seem to have consistent output.
 
-## Trials with difference gcov parse configuration
+## Trials with different gcov parser configuration
 
-Trying with:
+Trying with `.codecov.yml`:
 
 ```
 parsers:
