@@ -3,11 +3,11 @@ package main
 import "fmt"
 
 func partiallyCovered(a bool, b bool) bool {
-	if !a {
+	if !a && b {
 		return false
 	}
 
-	if !b || !a {
+	if !b {
 		return false
 	}
 
