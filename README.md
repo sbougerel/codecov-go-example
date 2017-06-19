@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/sbougerel/codecov-go-example/branch/master/graph/badge.svg)](https://codecov.io/gh/sbougerel/codecov-go-example)
+
 # codecov-go-example
 This GO repo only exists to illustrate discrepancy in computation of coverage by
 Codecov.io and the coverage reported by `go test -covermode=atomic`.
