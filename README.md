@@ -34,7 +34,8 @@ github.com/sbougerel/codecov-go-example/main.go:17.13,19.2 1 0
 
 See [coverage results on Codecov.io](https://codecov.io/gh/sbougerel/codecov-go-example).
 
-Codecov.io looks at the same generated file `coverage.txt` as the GO tool but reports a much lower coverage.
+Codecov.io looks at the same generated file `coverage.txt` as the GO tool but
+reports a much lower coverage.
 
 ## Coverage % computation for Go tool is 50%
 
@@ -45,7 +46,9 @@ For more visual evidance that the coverage is reported differently:
 go tool cover -html coverage.txt
 ```
 
-GO test counts "statements" as reported in `coverage.txt`. It sees that 3 statements are covered, while 3 statements are left out, thus reaching 50% coverage.
+GO test counts "statements" as reported in `coverage.txt`. It sees that 3
+statements are covered, while 3 statements are left out, thus reaching 50%
+coverage.
 
 Let's focus on line 6 to 8 in `main.go`:
 ```go
@@ -68,7 +71,8 @@ highlighted in Codecov.io inspite of being present in the report.
 
 __The same logic should be applied to opening `{` with no statements__
 
-With this logic, both numbers would now be completely in-line, the partially covered line would be avoided.
+With this logic, both numbers would now be completely in-line, the partially
+covered line would be avoided.
 
 ## Trials with Cobertura XML format
 
