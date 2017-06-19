@@ -7,7 +7,7 @@ func partiallyCovered(a bool, b bool) bool {
 		return false
 	}
 
-	if !b {
+	if !b || !a {
 		return false
 	}
 
