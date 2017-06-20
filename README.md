@@ -64,16 +64,25 @@ count, thus diverting from it.
 
 Also, Codecov.io sees 8 lines, whereas GO tools reports 6 statements.
 
-# Possible resolution
 
-It seems that Codecov.io has internal logic to avoid including closing `}` with
-no statements on the lines, as evidenced by lines 8, 12, 19 not being
-highlighted in Codecov.io inspite of being present in the report.
+# Resolutions
 
-__The same logic should be applied to opening `{` with no statements__
+## Forked codecov-bash
+
+Codecov.io has a logic to avoid including lines with single`{`, `}` or empty
+lines, as evidenced by lines 8, 12, 19 not being highlighted in Codecov.io
+inspite of being present in the report.
+
+__In essence, the logic should be extended to non-empty lines with `{` at the
+end__
 
 With this logic, both numbers would now be completely in-line, the partially
 covered line would be avoided.
+
+[My fork of the Codecov uploader](https://github.com/sbougerel/codecov-bash)
+contains the necessary fixes to implement this. It tampers with the report being
+submitted.
+
 
 ## Trials with Cobertura XML format
 
