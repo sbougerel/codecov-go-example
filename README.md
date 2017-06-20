@@ -73,15 +73,17 @@ Codecov.io has a logic to avoid including lines with single`{`, `}` or empty
 lines, as evidenced by lines 8, 12, 19 not being highlighted in Codecov.io
 inspite of being present in the report.
 
-__In essence, the logic should be extended to non-empty lines with `{` at the
+__In essence, the logic can be extended to non-empty lines with `{` at the
 end__
 
-With this logic, both numbers would now be completely in-line, the partially
+With this logic, both numbers are now be completely in-line, the partially
 covered line would be avoided.
 
 [My fork of the Codecov uploader](https://github.com/sbougerel/codecov-bash)
-contains the necessary fixes to implement this. It tampers with the report being
-submitted.
+contains the necessary fixes to implement this and is currently being reviewed
+as a PR. Once accepted, this project will cease to exists.
+
+To achieve this, it tampers with the report being submitted.
 
 
 ## Trials with Cobertura XML format
