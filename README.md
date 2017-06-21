@@ -1,18 +1,29 @@
 [![codecov](https://codecov.io/gh/sbougerel/codecov-go-example/branch/master/graph/badge.svg)](https://codecov.io/gh/sbougerel/codecov-go-example)
 
 # codecov-go-example
-This GO repo only exists to illustrate discrepancy in computation of coverage by
+By default, there is a discrepancy in computation of coverage by
 Codecov.io and the coverage reported by `go test -covermode=atomic`.
 
-Specifically, this repository contains only a single GO file, with a single test
-file.  This test file is made specifically to ignore some conditional path of
-the GO file.
+This is because of the way `go test ...` reports coverage; for `if` statements:
+```go
+   if Condition() {
+     DoSomething()
+   }
+```
 
-The fact that some lines are partially covered leads to computation differences
-between the 2 applications. This means that relying on one tool will confuse the
-user of the other tools.
+it includes the trailing `{` at end of line containig the `if Condition()` into
+the _next_ statement `DoSomething()`. This means that if `Condition()` evaluates
+to false, you have a _partial hit_ on this line. Additionally, `go test ...`
+still keeps track of statements covered, regardless of the lines hit, while
+Codecov tracks lines.
 
-## Obtaining coverage
+__The output of both tools can differ widely due to that__. At my company, which
+uses a large codebase, we have more that 10% in coverage difference reported by
+both tools on some packages.
+
+I used this repository to experiment with different solutions.
+
+## Obtaining coverage with GO tools
 
 ```
 $ go test -race -covermode=atomic -coverprofile=coverage.txt .
@@ -31,97 +42,43 @@ github.com/sbougerel/codecov-go-example/main.go:10.8,12.3 1 1
 github.com/sbougerel/codecov-go-example/main.go:17.13,19.2 1 0
 ```
 
-## Coverage % computation for Codecov.io is 37.5%
+## Prefered way to push coverage to Codecov.
 
-See [coverage results on Codecov.io](https://codecov.io/gh/sbougerel/codecov-go-example).
+After exprimentation, I found that using CoberturaXML format yields the best
+match to runing `go test ...` and most importantly, shows on Codecov what one
+would expect of the coverage of its files.
 
-Codecov.io looks at the same generated file `coverage.txt` as the GO tool but
-reports a much lower coverage.
-
-## Coverage % computation for Go tool is 50%
-
-As can be seen above, the GO tool reports that 50% of statements are covered.
-For more visual evidance that the coverage is reported differently:
-
-```
-go tool cover -html coverage.txt
-```
-
-GO test counts "statements" as reported in `coverage.txt`. It sees that 3
-statements are covered, while 3 statements are left out, thus reaching 50%
-coverage.
-
-Let's focus on line 6 to 8 in `main.go`:
-```go
-	if !a {	
-		return false
-	}
-```
-
-In line 6, `if !a` is covered but the opening curly `{` is not. Codecov reports
-a partial coverage due to this curly brace and does not include it in the final
-count, thus diverting from it.
-
-Also, Codecov.io sees 8 lines, whereas GO tools reports 6 statements.
-
-
-# Resolutions
-
-## Forked codecov-bash
-
-Codecov.io has a logic to avoid including lines with single`{`, `}` or empty
-lines, as evidenced by lines 8, 12, 19 not being highlighted in Codecov.io
-inspite of being present in the report.
-
-__In essence, the logic can be extended to non-empty lines with `{` at the
-end__
-
-With this logic, both numbers are now be completely in-line, the partially
-covered line would be avoided.
-
-[My fork of the Codecov uploader](https://github.com/sbougerel/codecov-bash)
-contains the necessary fixes to implement this and is currently being reviewed
-as a PR. Once accepted, this project will cease to exists.
-
-To achieve this, it tampers with the report being submitted.
-
-
-## Trials with Cobertura XML format
-
-Using external utilities:
+Get external utilities:
 
 ```
 $ go get github.com/axw/gocov/...
 $ go get github.com/AlekSi/gocov-xml
 ```
 
-I was able to get the desired 50% coverage with the exact same line-by-line
-coverage output reported by `go test ...` This is the best fit so far. It is a
-bit annoying to have to go through these tools, however it is necessary, it
-seems.
-
-It seems that `gocov` also uses _magic_ to remove the opening and closing braces
-from the reports. Which in turn, is then interpreted to a matching count by
-Codecov.io.
-
-This should probably be the preferred method of reporting code coverage for
-Golang projects in Codecov.io, even if it is convoluted. At least, with this
-method, both tools seem to have consistent output.
-
-## Trials with different gcov parser configuration
-
-Trying with `.codecov.yml`:
+After the output of `go test ...` above, run:
 
 ```
-parsers:
-  gcov:
-    branch_detection:
-      conditional: no
-      loop: no
-      method: no
-      macro: no
+$ gocov convert coverage.txt | gocov-xml > coverage.xml
 ```
 
-It also generated a desired 50% coverage output on Codecov. However the line
-count remained different from the statement count by `go test` which is a bit
-annoying.
+Then push this new XML file to Codecov.
+
+```
+bash <(curl -s https://codecov.io/bash) -f coverage.xml
+```
+
+See [coverage results on Codecov.io](https://codecov.io/gh/sbougerel/codecov-go-example).
+
+## Results
+
+As can be seen above, the GO tool reports that 50% of statements are covered,
+and same for Codecov.io. For more visual evidance that the coverage is reported
+are similar, you can run, on the original `coverage.txt`
+
+```
+go tool cover -html coverage.txt
+```
+
+# Conclusion
+
+This method is the one currently in use in my company.
